@@ -29,7 +29,7 @@ export async function signInAction(
     const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "unknown";
     try {
         await rateLimiter.consume(ip);
-    } catch (error) {
+    } catch {
         return { error: "Too many attempts. Please try again later." };
     }
 

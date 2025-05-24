@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { dbConnect } from "@/database/db";
 import { Session } from "@/database/models/sessionsModel";
-import { User } from "@/database/models/usersModel";
+import { User, IUser } from "@/database/models/usersModel";
 
 type ReturnedUserData = {
     username: string;
@@ -26,14 +26,14 @@ export async function getUserFromSessionCookie(): Promise<ReturnedUserData | nul
     }
 
     // Find user by session.userId
-    const user: any = await User.findById(session.userId);
+    const user: IUser | null = await User.findById(session.userId);
     if (!user) {
         return null;
     }
 
     return {
         session: session.session,
-        userId: user._id.toString(),
+        userId: (user._id as string | { toString(): string }).toString(),
         createdAt: session.createdAt,
         email: user.email,
         username: user.username,
